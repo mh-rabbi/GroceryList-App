@@ -59,7 +59,7 @@ public class GroceryDBHelper extends SQLiteOpenHelper {
         ArrayList<GroceryItem> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor c = db.query(TABLE_NAME, null, null, null, null, null, COLUMN_ID + "DESC");
+        Cursor c = db.query(TABLE_NAME, null, null, null, null, null, COLUMN_ID);
 
         if(c != null && c.moveToFirst()) {
             do {
