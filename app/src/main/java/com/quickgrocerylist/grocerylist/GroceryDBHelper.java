@@ -1,6 +1,8 @@
 package com.quickgrocerylist.grocerylist;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -43,15 +45,33 @@ public class GroceryDBHelper extends SQLiteOpenHelper {
 
     public void insertItem(String name, String quantity) {
         SQLiteDatabase db = this.getWritableDatabase();
-        //String insertQuery = "INSERT INTO " + TABLE_NAME + " (" + COLUMN_NAME + ", " + COLUMN_QUANTITY + ") VALUES ('" + name + "', '" + quantity + "')";
-       // db.execSQL(insertQuery);
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_NAME, name);
+        values.put(COLUMN_QUANTITY, quantity);
+        values.put(COLUMN_IS_BOUGHT, 0);
+        db.insert(TABLE_NAME, null, values);
+
         db.close();
     }
 
     public ArrayList<GroceryItem> getAllItems() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT * FROM " + TABLE_NAME;
         ArrayList<GroceryItem> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor c = db.query(TABLE_NAME, null, null, null, null, null, COLUMN_ID + "DESC");
+
+        if(c != null && c.moveToFirst()) {
+            do {
+                GroceryItem item = new GroceryItem();
+                item.setId(c.getInt(c.getColumnIndexOrThrow(COLUMN_ID)));
+                item.setName(c.getString(c.getColumnIndexOrThrow(COLUMN_NAME)));
+                item.setQuantity(c.getString(c.getColumnIndexOrThrow(COLUMN_QUANTITY)));
+                item.setBought(c.getInt(c.getColumnIndexOrThrow(COLUMN_IS_BOUGHT)) == 1);
+                list.add(item);
+            } while (c.moveToNext());
+            c.close();
+        }
 
         db.close();
         return list;
@@ -59,15 +79,15 @@ public class GroceryDBHelper extends SQLiteOpenHelper {
 
     public void updateItem(int id, String name, String quantity, boolean isBought) {
         SQLiteDatabase db = this.getWritableDatabase();
-        //String updateQuery = "UPDATE " + TABLE_NAME + " SET " + COLUMN_NAME + " = '" + name + "', " + COLUMN_QUANTITY + " = '" + quantity + "', " + COLUMN_IS_BOUGHT + " = " + (isBought ? 1 : 0) + " WHERE " + COLUMN_ID + " = " + id;
-        //db.execSQL(updateQuery);
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_IS_BOUGHT, isBought ? 1 : 0);
+        db.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
     }
 
     public void deleteItem(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        //String deleteQuery = "DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = " + id;
-        //db.execSQL(deleteQuery);
+        db.delete(TABLE_NAME, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
     }
 
