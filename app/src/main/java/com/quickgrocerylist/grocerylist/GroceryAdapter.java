@@ -1,0 +1,70 @@
+package com.quickgrocerylist.grocerylist;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
+public class GroceryAdapter extends RecyclerView.Adapter<GroceryAdapter.GroceryViewHolder> {
+
+    private Context context;
+    private ArrayList<GroceryItem> groceryList;
+    private GroceryDBHelper dbHelper;
+
+    public GroceryAdapter(Context context, ArrayList<GroceryItem> groceryList, GroceryDBHelper dbHelper) {
+        this.context = context;
+        this.groceryList = groceryList;
+        this.dbHelper = dbHelper;
+    }
+
+    @NonNull
+    @Override
+    public GroceryAdapter.GroceryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_grocery, parent, false);
+        return new GroceryViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull GroceryAdapter.GroceryViewHolder holder, int position) {
+        GroceryItem item = groceryList.get(position);
+        holder.textViewItem.setText(item.getName() + " - " + item.getQuantity());
+        holder.checkBoxBought.setChecked(item.isBought());
+
+        holder.checkBoxBought.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            dbHelper.updateItem(item.getId(), isChecked);
+            item.setBought(isChecked);
+        });
+
+        holder.buttonDelete.setOnClickListener(v -> {
+            dbHelper.deleteItem(item.getId());
+            groceryList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, groceryList.size());
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return groceryList.size();
+    }
+
+    public static class GroceryViewHolder extends RecyclerView.ViewHolder {
+        TextView textViewItem;
+        CheckBox checkBoxBought;
+        ImageView buttonDelete;
+        public GroceryViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textViewItem = itemView.findViewById(R.id.textViewItem);
+            checkBoxBought = itemView.findViewById(R.id.checkBoxBought);
+            buttonDelete = itemView.findViewById(R.id.buttonDelete);
+        }
+    }
+}

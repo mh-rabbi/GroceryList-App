@@ -77,7 +77,7 @@ public class GroceryDBHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public void updateItem(int id, String name, String quantity, boolean isBought) {
+    public void updateItem(int id, boolean isBought) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_IS_BOUGHT, isBought ? 1 : 0);
