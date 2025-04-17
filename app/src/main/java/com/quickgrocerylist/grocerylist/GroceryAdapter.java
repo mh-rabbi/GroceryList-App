@@ -1,5 +1,6 @@
 package com.quickgrocerylist.grocerylist;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,9 @@ import java.util.ArrayList;
 
 public class GroceryAdapter extends RecyclerView.Adapter<GroceryAdapter.GroceryViewHolder> {
 
-    private Context context;
-    private ArrayList<GroceryItem> groceryList;
-    private GroceryDBHelper dbHelper;
+    private final Context context;
+    private final ArrayList<GroceryItem> groceryList;
+    private final GroceryDBHelper dbHelper;
 
     public GroceryAdapter(Context context, ArrayList<GroceryItem> groceryList, GroceryDBHelper dbHelper) {
         this.context = context;
@@ -32,6 +33,7 @@ public class GroceryAdapter extends RecyclerView.Adapter<GroceryAdapter.GroceryV
         return new GroceryViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull GroceryAdapter.GroceryViewHolder holder, int position) {
         GroceryItem item = groceryList.get(position);
