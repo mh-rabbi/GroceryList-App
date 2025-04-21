@@ -67,9 +67,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-        private void loadItems() {
-            groceryList = dbHelper.getAllItems();
-            adapter = new GroceryAdapter(this, groceryList, dbHelper);
-            recyclerViewItems.setAdapter(adapter);
+    void loadItems() {
+        ArrayList<GroceryItem> allItems = dbHelper.getAllItems();
+        ArrayList<GroceryItem> unboughtItems = new ArrayList<>();
+        ArrayList<GroceryItem> boughtItems = new ArrayList<>();
+
+        for (GroceryItem item : allItems) {
+            if (item.isBought()) {
+                boughtItems.add(item);
+            } else {
+                unboughtItems.add(item);
+            }
         }
+
+        groceryList = new ArrayList<>();
+        groceryList.addAll(unboughtItems);
+
+        // Add a dummy "section" header item (optional)
+        if (!boughtItems.isEmpty()) {
+            GroceryItem sectionHeader = new GroceryItem(-1, "Bought Already", "", false);
+            groceryList.add(sectionHeader);
+        }
+
+        groceryList.addAll(boughtItems);
+
+        adapter = new GroceryAdapter(this, groceryList, dbHelper);
+        recyclerViewItems.setAdapter(adapter);
+    }
+
 }

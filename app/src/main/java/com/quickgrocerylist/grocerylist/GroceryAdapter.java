@@ -35,23 +35,40 @@ public class GroceryAdapter extends RecyclerView.Adapter<GroceryAdapter.GroceryV
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull GroceryAdapter.GroceryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull GroceryViewHolder holder, int position) {
         GroceryItem item = groceryList.get(position);
-        holder.textViewItem.setText(item.getName() + " - " + item.getQuantity());
-        holder.checkBoxBought.setChecked(item.isBought());
 
-        holder.checkBoxBought.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            dbHelper.updateItem(item.getId(), isChecked);
-            item.setBought(isChecked);
-        });
+        if (item.getId() == -1) {  // Section header
+            holder.textViewItem.setText(item.getName());
+            holder.textViewItem.setTextSize(18);
+            holder.textViewItem.setTextColor(context.getResources().getColor(R.color.teal_700));
+            holder.checkBoxBought.setVisibility(View.GONE);
+            holder.buttonDelete.setVisibility(View.GONE);
+        } else {
+            holder.textViewItem.setText(item.getName() + " - " + item.getQuantity());
+            holder.textViewItem.setTextColor(item.isBought()
+                    ? context.getResources().getColor(R.color.gray)
+                    : context.getResources().getColor(R.color.black));
+            holder.checkBoxBought.setVisibility(View.VISIBLE);
+            holder.buttonDelete.setVisibility(View.VISIBLE);
+            holder.checkBoxBought.setChecked(item.isBought());
 
-        holder.buttonDelete.setOnClickListener(v -> {
-            dbHelper.deleteItem(item.getId());
-            groceryList.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, groceryList.size());
-        });
+            holder.checkBoxBought.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                dbHelper.updateItem(item.getId(), isChecked);
+                item.setBought(isChecked);
+                ((MainActivity) context).loadItems(); // Refresh UI
+            });
+
+            holder.buttonDelete.setOnClickListener(v -> {
+                dbHelper.deleteItem(item.getId());
+                groceryList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, groceryList.size());
+                ((MainActivity) context).loadItems(); // Refresh UI
+            });
+        }
     }
+
 
     @Override
     public int getItemCount() {
