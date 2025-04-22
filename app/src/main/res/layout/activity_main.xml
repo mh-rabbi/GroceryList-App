@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:paddingTop="26dp"
     tools:context=".MainActivity">
 
     <EditText
@@ -31,6 +32,8 @@
         android:layout_marginTop="8dp" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="@drawable/item_view_bg"
+        android:paddingTop="10dp"
         android:id="@+id/recyclerViewItems"
         android:layout_width="match_parent"
         android:layout_height="0dp"

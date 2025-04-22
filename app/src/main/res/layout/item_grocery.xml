@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:padding="8dp"
     android:gravity="center_vertical"
-    android:background="#EEEEEE"
+    android:background="@drawable/single_item_bg"
     android:layout_marginBottom="4dp">
 
     <CheckBox
