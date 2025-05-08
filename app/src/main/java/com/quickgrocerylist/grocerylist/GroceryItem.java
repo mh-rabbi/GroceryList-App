@@ -5,6 +5,8 @@ public class GroceryItem {
     private String name;
     private String quantity;
     private boolean isBought;
+    private double price;
+
 
     public GroceryItem() {}
 
@@ -27,4 +29,13 @@ public class GroceryItem {
 
     public boolean isBought() { return isBought; }
     public void setBought(boolean bought) { isBought = bought; }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
 }

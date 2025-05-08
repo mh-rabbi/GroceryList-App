@@ -20,6 +20,7 @@ public class GroceryDBHelper extends SQLiteOpenHelper {
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_QUANTITY = "quantity";
     private static final String COLUMN_IS_BOUGHT = "isBought";
+    private static final String COLUMN_PRICE = "price";
 
     public GroceryDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,7 +32,8 @@ public class GroceryDBHelper extends SQLiteOpenHelper {
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 COLUMN_NAME + " TEXT," +
                 COLUMN_QUANTITY + " TEXT," +
-                COLUMN_IS_BOUGHT + " INTEGER DEFAULT 0)";
+                COLUMN_IS_BOUGHT + " INTEGER DEFAULT 0," +
+                COLUMN_PRICE + " REAL DEFAULT 0.0)";
 
         db.execSQL(createTable);
     }
@@ -68,6 +70,7 @@ public class GroceryDBHelper extends SQLiteOpenHelper {
                 item.setName(c.getString(c.getColumnIndexOrThrow(COLUMN_NAME)));
                 item.setQuantity(c.getString(c.getColumnIndexOrThrow(COLUMN_QUANTITY)));
                 item.setBought(c.getInt(c.getColumnIndexOrThrow(COLUMN_IS_BOUGHT)) == 1);
+                item.setPrice(c.getDouble(c.getColumnIndexOrThrow(COLUMN_PRICE)));
                 list.add(item);
             } while (c.moveToNext());
             c.close();
@@ -83,6 +86,12 @@ public class GroceryDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_IS_BOUGHT, isBought ? 1 : 0);
         db.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
+    }
+    public void updateItemPrice(int id, double price) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PRICE, price);
+        db.update(TABLE_NAME, values,  COLUMN_ID + "=?", new String[]{String.valueOf(id)});
     }
 
     public void deleteItem(int id) {

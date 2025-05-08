@@ -82,14 +82,21 @@ public class MainActivity extends AppCompatActivity {
 
         groceryList = new ArrayList<>();
         groceryList.addAll(unboughtItems);
-
-        // Add a dummy "section" header item (optional)
+        // Add a dummy "section" header item
         if (!boughtItems.isEmpty()) {
             GroceryItem sectionHeader = new GroceryItem(-1, "Bought Already", "", false);
             groceryList.add(sectionHeader);
         }
-
         groceryList.addAll(boughtItems);
+
+        double totalCost = 0;
+        for (GroceryItem item : boughtItems) {
+            totalCost += item.getPrice();
+        }
+        // Add dummy total item
+        GroceryItem totalItem = new GroceryItem(-2, "Total Cost", "", false);
+        totalItem.setPrice(totalCost);
+        groceryList.add(totalItem);
 
         adapter = new GroceryAdapter(this, groceryList, dbHelper);
         recyclerViewItems.setAdapter(adapter);
