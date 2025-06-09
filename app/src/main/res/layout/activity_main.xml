@@ -25,12 +25,14 @@
 
     <EditText
         android:id="@+id/editTextItemName"
+        android:textColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Item Name" />
 
     <EditText
         android:id="@+id/editTextQuantity"
+        android:textColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Quantity" />

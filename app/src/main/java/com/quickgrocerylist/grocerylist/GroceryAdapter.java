@@ -105,12 +105,15 @@ public class GroceryAdapter extends RecyclerView.Adapter<GroceryAdapter.GroceryV
                     @Override
                     public void afterTextChanged(Editable s) {
                         try {
-                            double price = Double.parseDouble(s.toString());
+                            double price = s.toString().isEmpty() ? 0 : Double.parseDouble(s.toString());
                             item.setPrice(price);
                             dbHelper.updateItemPrice(item.getId(), price);
-                           // ((MainActivity) context).loadItems(); // Recalculate total
+                            // Trigger total update after a small delay to avoid constant updates while typing
+                            holder.editTextPrice.postDelayed(() -> {
+                                ((MainActivity) context).updateTotalOnly();
+                            }, 500); // 500ms delay
                         } catch (NumberFormatException e) {
-                            item.setPrice(0.0); // fallback to 0
+                            item.setPrice(0.0);
                         }
                     }
                 };

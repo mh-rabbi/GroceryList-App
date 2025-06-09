@@ -101,5 +101,25 @@ public class MainActivity extends AppCompatActivity {
         adapter = new GroceryAdapter(this, groceryList, dbHelper);
         recyclerViewItems.setAdapter(adapter);
     }
+    public void updateTotalOnly() {
+        if (groceryList.isEmpty()) return;
+
+        // Calculate new total
+        double totalCost = 0;
+        for (GroceryItem item : groceryList) {
+            if (item.isBought() && item.getId() > 0) { // Only count actual bought items
+                totalCost += item.getPrice();
+            }
+        }
+
+        // Update the total item
+        for (int i = groceryList.size() - 1; i >= 0; i--) {
+            if (groceryList.get(i).getId() == -2) { // Find the total item
+                groceryList.get(i).setPrice(totalCost);
+                adapter.notifyItemChanged(i);
+                break;
+            }
+        }
+    }
 
 }
