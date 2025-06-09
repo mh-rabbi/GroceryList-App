@@ -9,7 +9,19 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:paddingTop="26dp"
+    android:background="#FFF783"
     tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add your Grocery Items: "
+        android:padding="8dp"
+        android:textStyle="italic|bold"
+        android:textSize="20sp"
+        android:textColor="#0025FF"
+        />
+
 
     <EditText
         android:id="@+id/editTextItemName"
