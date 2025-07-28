@@ -30,6 +30,7 @@ android {
 
 dependencies {
 
+    implementation libs.lottie // or the latest version
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
